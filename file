@@ -1,15 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 int main() {
     vector<int> nums = {1, 2, 3, 4, 5};
-    int count = 0;
-    for(auto x : nums) {
-        if(x > 2) {
-            count++;
-        }
-    }
-    cout << count << endl;
+    auto counter{count_if(nums.begin(), nums.end(),
+        [](int num) {
+            return (num > 2);
+        })};
+    cout << counter << endl;
 }
