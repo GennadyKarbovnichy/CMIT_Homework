@@ -42,6 +42,6 @@ void mapInFile(map<int, int> map, int average) {
 int main() {
     map<int, int> weather = weatherFilling(31);
     int sum = mapSum(weather);
-    int average = getAverage(sum, 30);
+    int average = getAverage(sum, weather.size());
     mapInFile(weather, average);
 }
