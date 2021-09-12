@@ -8,17 +8,14 @@ struct Order {
 	int id;
 	string description;
 	string status;
-	void print() {
-		cout << "ID: " << id <<
-			"\nDescription: " << description <<
-			"\nStatus: " << status << endl;
-	}
 };
+
+void orderPrint(const Order& ord);
 
 void orderPrintAll(const vector<Order>& vect) {
 	system("cls");
 	for(auto x : vect) {
-		x.print();
+		orderPrint(x);
 		cout << "\n";
 	};
 	system("pause");
