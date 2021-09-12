@@ -15,40 +15,11 @@ struct Order {
 	}
 };
 
-void orderAdd(vector<Order>& vect) {
-	system("cls");
-	Order neworder;
-	neworder.id = vect.size() + 1;
-	cout << "Write order description: ";
-	cin >> neworder.description;
-	cout << "Write order status: ";
-	cin >> neworder.status;
-	vect.push_back(neworder);
-}
+void orderAdd(vector<Order>& vect);
 
-void orderPrintAll(const vector<Order>& vect) {
-	system("cls");
-	for(auto x : vect) {
-		x.print();
-		cout << "\n";
-	}
-	system("pause");
-}
+void orderPrintAll(const vector<Order>& vect);
 
-void orderFind(const vector<Order>& vect, const int& orderid) {
-	system("cls");
-	cout << "Trying to find your order...\n";
-	for(auto x : vect) {
-		if(x.id == orderid) {
-			cout << "We found it! Look:\n";
-			x.print();
-			system("pause");
-			return;
-		}
-	}
-	cout << "The order was not found. Please try again.\n";
-	system("pause");
-}
+void orderFind(const vector<Order>& vect, const int& orderid);
 
 int main() {
 	int a;
@@ -91,3 +62,4 @@ int main() {
 		};
 	}
 }
+
