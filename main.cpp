@@ -1,14 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include "order.h"
 
 using namespace std;
 
-struct Order {
-	int id;
-	string description;
-	string status;
-};
+struct Order;
 
 void orderPrint(const Order& ord);
 
@@ -71,7 +65,6 @@ int main() {
 				orderid = orderFind(orders, orderid);
 				if (orderid != 0) {
 					orderEdit(orders, orderid);
-					system("pause");
 				}
 				else {
 					cout << "Order isn't found. Please try again.\n";
@@ -105,4 +98,3 @@ int main() {
 		};
 	}
 }
-
