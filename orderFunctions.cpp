@@ -6,8 +6,17 @@ struct Order;
 
 void orderPrint(const Order& ord) {
 	cout << "ID: " << ord.id <<
-		"\nDescription: " << ord.description <<
+		"\nDescription: " << ord.description <<f
 		"\nStatus: " << ord.status << endl;
+}
+
+void orderSave(const Order& ord) {
+	ofstream orderWriter("Orders.txt", ios::app);
+	if(!orderWriter) {
+		cout << "This order will be saved only for now..." << endl;
+	}
+	orderWriter << ord.id << endl << ord.description << endl << ord.status << endl;
+	orderWriter.close();
 }
 
 void orderAdd(vector<Order>& vect, int ordersDeleted) {
@@ -20,6 +29,7 @@ void orderAdd(vector<Order>& vect, int ordersDeleted) {
 	cout << "Write order status: ";
 	getline(cin, neworder.status);
 	vect.push_back(neworder);
+	orderSave(neworder);
 }
 
 void orderPrintAll(const vector<Order>& vect) {
@@ -54,4 +64,25 @@ void orderEdit(vector<Order>& vect, const int& orderid) {
 void orderDelete(vector<Order>& vect, const int& orderid, int& ordersDeleted) {
 	vect.erase(vect.begin() + orderid - ordersDeleted - 1);
 	ordersDeleted += 1;
+}
+
+vector<Order> orderRead() {
+	vector<Order> vect;
+	ifstream orderReader("SomeText.txt");
+	if (!orderReader) {
+		cout << "Sorry, we can't read saved orders!" << endl;
+	}
+	while (orderReader) {
+		Order ord;
+		string orderPart;
+		orderReader >> orderPart;
+		ord.id = stoi(orderPart);
+		orderReader >> orderPart;
+		ord.description = orderPart;
+		orderReader >> orderPart;
+		ord.status = orderPart;
+		vect.push_back(ord);
+	}
+ 
+	return vect;
 }
