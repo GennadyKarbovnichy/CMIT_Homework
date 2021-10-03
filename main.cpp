@@ -6,6 +6,8 @@ struct Order;
 
 void orderPrint(const Order& ord);
 
+void orderSave(const Order& ord);
+
 void orderAdd(vector<Order>& vect, int ordersDeleted);
 
 void orderPrintAll(const vector<Order>& vect);
@@ -15,6 +17,8 @@ int orderFind(const vector<Order>& vect, const int& orderid);
 void orderEdit(vector<Order>& vect, const int& orderid);
 
 void orderDelete(vector<Order>& vect, const int& orderid, int& ordersDeleted);
+
+vector<Order> orderRead()
 
 int main() {
 	int a;
@@ -88,6 +92,11 @@ int main() {
 				break;
 			}
 			case 6: {
+				cout << "Trying to read orders..." << endl;
+				orders = orderRead();
+				break;
+			}
+			case 7: {
 				key = false;
 				break;
 			}
