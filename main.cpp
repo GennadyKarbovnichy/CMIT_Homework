@@ -6,8 +6,6 @@ struct Order;
 
 void orderPrint(const Order &ord);
 
-void orderSave(const Order &ord);
-
 Order orderAdd(const vector<Order> &vect);
 
 void orderPrintAll(const vector<Order> &vect);
@@ -18,11 +16,12 @@ Order orderEdit(Order ord);
 
 vector<Order> orderReplace(vector<Order> &vect, Order &ord);
 
-Order orderDelete(Order &ord);
+Order orderDelete(Order ord);
 
 int main() {
 	int input;
 	vector<Order> orders;
+//	orders = ordersLoad("Orders.csv");
 	bool key = true;
 	while(key) {
 		system("cls");
@@ -32,6 +31,7 @@ int main() {
 		    	"2) Print all orders.\n" <<
 		    	"3) Find an order and print it.\n" <<
 		    	"4) Edit an existing order.\n" <<
+		    	"5) Delete an existing order.\n" <<
 		    	"\nEvery other input will cause exit." <<
 				"\n\n >> ";
 		cin >> input;
@@ -47,8 +47,11 @@ int main() {
 			}
 			case 3: {
 				Order ord = orderFind(orders);
-				if (ord.description != "" and not ord.isDeleted)
+				if (ord.description != "" and not ord.isDeleted) {
 					orderPrint(ord);
+				}
+				cout << endl;
+				system("pause");
 				break;
 			}
 			case 4: {
@@ -57,7 +60,7 @@ int main() {
 				break;
 			}
 			case 5: {
-				ord = orderDelete(orderFind(orders));
+				Order ord = orderDelete(orderFind(orders));
 				orders = orderReplace(orders, ord);
 				break;
 			}
