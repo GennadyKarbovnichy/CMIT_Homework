@@ -4,42 +4,41 @@ using namespace std;
 
 struct Order;
 
-void orderPrint(const Order& ord);
+void orderPrint(const Order &ord);
 
-void orderSave(const Order& ord);
+Order orderAdd(const vector<Order> &vect);
 
-void orderAdd(vector<Order>& vect, int ordersDeleted);
+void orderPrintAll(const vector<Order> &vect);
 
-void orderPrintAll(const vector<Order>& vect);
+Order orderFind(const vector<Order> &vect);
 
-int orderFind(const vector<Order>& vect, const int& orderid);
+Order orderEdit(Order ord);
 
-void orderEdit(vector<Order>& vect, const int& orderid);
+vector<Order> orderReplace(vector<Order> &vect, Order &ord);
 
-void orderDelete(vector<Order>& vect, const int& orderid, int& ordersDeleted);
-
-vector<Order> orderRead()
+Order orderDelete(Order ord);
 
 int main() {
-	int a;
-	int ordersDeleted = 0;
+	int input;
 	vector<Order> orders;
+//	orders = ordersLoad("Orders.csv");
 	bool key = true;
 	while(key) {
 		system("cls");
-		
-		cout << "Order handling\n" <<
-			"\t1) Add an order\n" <<
-			"\t2) Print all orders\n" <<
-			"\t3) Find the order\n" <<
-			"\t4) Edit the order\n" <<
-			"\t5) Delete the order\n" <<
-			"\t6) Exit\n";
-		cin >> a;
-		
-		switch(a) {
+
+		cout << "\tOrder handling\n" <<
+		    	"1) Add an order.\n" <<
+		    	"2) Print all orders.\n" <<
+		    	"3) Find an order and print it.\n" <<
+		    	"4) Edit an existing order.\n" <<
+		    	"5) Delete an existing order.\n" <<
+		    	"\nEvery other input will cause exit." <<
+				"\n\n >> ";
+		cin >> input;
+
+		switch(input) {
 			case 1: {
-				orderAdd(orders, ordersDeleted);
+				orders.push_back(orderAdd(orders));
 				break;
 			}
 			case 2: {
@@ -47,63 +46,27 @@ int main() {
 				break;
 			}
 			case 3: {
-				int orderid;
-				cout << "What is ID of this order? ";
-				cin >> orderid;
-				orderid = orderFind(orders, orderid);
-				if (orderid != 0) {
-					cout << "We found it! Look:\n";
-					orderPrint(orders[orderid - ordersDeleted - 1]);
-					system("pause");
+				Order ord = orderFind(orders);
+				if (ord.description != "" and not ord.isDeleted) {
+					orderPrint(ord);
 				}
-				else {
-					cout << "Order isn't found. Please try again.\n";
-					system("pause");
-				}
+				cout << endl;
+				system("pause");
 				break;
 			}
 			case 4: {
-				int orderid;
-				cout << "What is ID of this order? ";
-				cin >> orderid;
-				orderid = orderFind(orders, orderid);
-				if (orderid != 0) {
-					orderEdit(orders, orderid);
-				}
-				else {
-					cout << "Order isn't found. Please try again.\n";
-					system("pause");
-				}
+				Order ord = orderEdit(orderFind(orders));
+				orders = orderReplace(orders, ord);
 				break;
 			}
 			case 5: {
-				int orderid;
-				cout << "What is ID of this order? ";
-				cin >> orderid;
-				orderid = orderFind(orders, orderid);
-				if (orderid != 0) {
-					orderDelete(orders, orderid, ordersDeleted);
-					system("pause");
-				}
-				else {
-					cout << "Order isn't found. Please try again.\n";
-					system("pause");
-				}
-				break;
-			}
-			case 6: {
-				cout << "Trying to read orders..." << endl;
-				orders = orderRead();
-				break;
-			}
-			case 7: {
-				key = false;
+				Order ord = orderDelete(orderFind(orders));
+				orders = orderReplace(orders, ord);
 				break;
 			}
 			default: {
-				cout << "Repeat input." << endl;	
-				system("pause");
+				key = false;
 			}
-		};
+		}
 	}
 }
