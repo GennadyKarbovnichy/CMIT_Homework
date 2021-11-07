@@ -1,25 +1,29 @@
 #include "order.h"
+#include <sstream>
+#include <iterator>
 
 using namespace std;
 
 struct Order;
 
+template <typename Out>
+void split(const string &s, char delim, Out result) {
+    istringstream iss(s);
+    string item;
+    while (getline(iss, item, delim)) {
+        *result++ = item;
+    }
+}
+
+vector<string> split(const string &s, char delim) {
+    vector<string> elems;
+    split(s, delim, back_inserter(elems));
+    return elems;
+}
+
 void orderPrint(const Order &ord) {
 	cout << "ID: " << ord.id << "\nDescription: " << ord.description << "\nStatus: " << ord.status << endl;
 }
-
-//void orderSave(const Order &ord, const string filename) {
-//	ofstream orderSaver;
-//	orderSaver.open(filename, ios::app);
-//	if (!orderSaver) {
-//		cout << "Oh sorry, this order will be saved only for now!";
-//		return;
-//	}
-//	orderSaver << ord.id << ";"
-//	           << ord.description << ";"
-//	           << ord.status << "\n";
-//	orderSaver.close();
-//}
 
 Order orderAdd(const vector<Order> &vect) {
 	Order orderNew;
@@ -32,8 +36,7 @@ Order orderAdd(const vector<Order> &vect) {
 	getline(cin, orderNew.description);
 	cout << "Write order status: ";
 	getline(cin, orderNew.status);
-//	cout << "Saving your order...";
-//	orderSave(orderNew, "Orders.csv");
+	if(orderNew.description == "" && orderNew.status == "") orderNew.isDeleted = true;
 	return orderNew;
 }
 
@@ -65,17 +68,15 @@ Order orderFind(const vector<Order> &vect) {
 	return orderEmpty;
 }
 
-Order orderEdit(Order ord) {
+Order orderEdit(Order &ord) {
 	system("cls");
 	if (ord.description != "") {
-		Order orderNew;
-		orderNew.id = ord.id;
 		cout << "Enter new order description: ";
 		cin.ignore(32767, '\n');
-		getline(cin, orderNew.description);
-		cout << "Enter new order status: ";
-		getline(cin, orderNew.status);
-		return orderNew; //returns edited order
+		getline(cin, ord.description);
+		cout << "Enter new order status: ";	
+		getline(cin, ord.status);
+		ord.isDeleted = false;
 	}
 	return ord; //returns empty order
 }
@@ -99,15 +100,40 @@ Order orderDelete(Order ord) {
 	return ord;
 }
 
-//vector<Order> ordersLoad(const string filename) {
-//	vector<Order> vect;
-//	ifstream orderLoader(filename);
-//	if(!orderLoader) {
-//		cout << "Oh no, I can't load your saved orders!";
-//	} else {
-//		
-//	}
-//	orderLoader.close();
-//	orderLoader.open(filename, ios::trunc);
-//	orderLoader.close();
-//}
+vector<Order> ordersLoad(const string filename) {
+	vector<Order> vect;
+	ifstream orderLoader(filename.c_str());
+	if(!orderLoader) {
+		cout << "Oh no, I can't load your saved orders!";
+	} else {
+		while(orderLoader) {
+			string input;
+			Order orderNew;
+			getline(orderLoader, input);
+			vector<string> x = split(input, ';');
+			orderNew.id = stoi(x[0]);
+			orderNew.description = x[1];
+			orderNew.status = x[2];
+			orderNew.isDeleted = (stoi(x[3]) == 1);
+		}
+		orderLoader.close();
+	}
+	return vect;
+}
+
+void ordersSave(vector<Order> &vect, const string filename) {
+	ofstream orderSaver(filename);
+	if(!orderSaver) {
+		cout << "Sorry, your orders won't be saved.\n";
+		system("pause");
+		return;
+	}
+	for(int i = 0; i < vect.size(); i++) {
+		Order ord = vect[i];
+		orderSaver << ord.id << ";"
+				   << ord.description << ";"
+				   << ord.status << ";"
+				   << ord.isDeleted << "\n";
+	}
+	orderSaver.close();
+}
