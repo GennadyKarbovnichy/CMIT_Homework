@@ -12,16 +12,20 @@ void orderPrintAll(const vector<Order> &vect);
 
 Order orderFind(const vector<Order> &vect);
 
-Order orderEdit(Order ord);
+Order orderEdit(Order &ord);
 
 vector<Order> orderReplace(vector<Order> &vect, Order &ord);
 
 Order orderDelete(Order ord);
 
+vector<Order> ordersLoad(const string filename);
+
+void ordersSave(vector<Order> &vect, const string filename);
+
 int main() {
 	int input;
 	vector<Order> orders;
-//	orders = ordersLoad("Orders.csv");
+	orders = ordersLoad("Orders.csv");
 	bool key = true;
 	while(key) {
 		system("cls");
@@ -38,7 +42,9 @@ int main() {
 
 		switch(input) {
 			case 1: {
-				orders.push_back(orderAdd(orders));
+				Order ord = orderAdd(orders);
+				if(!ord.isDeleted)
+					orders.push_back(ord);
 				break;
 			}
 			case 2: {
@@ -55,7 +61,8 @@ int main() {
 				break;
 			}
 			case 4: {
-				Order ord = orderEdit(orderFind(orders));
+				Order ord = orderFind(orders);
+				ord = orderEdit(ord);
 				orders = orderReplace(orders, ord);
 				break;
 			}
@@ -69,4 +76,7 @@ int main() {
 			}
 		}
 	}
+	cout << "Saving your orders...\n";
+	ordersSave(orders, "Orders.csv");
+	return 0;
 }
