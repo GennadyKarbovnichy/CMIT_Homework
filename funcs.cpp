@@ -8,17 +8,21 @@ struct Order;
 
 template <typename Out>
 void split(const string &s, char delim, Out result) {
-    istringstream iss(s);
-    string item;
-    while (getline(iss, item, delim)) {
-        *result++ = item;
-    }
+   	istringstream iss(s);
+   	string item;
+   	while (getline(iss, item, delim)) {
+   	    *result++ = item;
+   	}
 }
 
 vector<string> split(const string &s, char delim) {
     vector<string> elems;
-    split(s, delim, back_inserter(elems));
-    return elems;
+    if(s != "") {
+	    split(s, delim, back_inserter(elems));
+    } else {
+    	elems.push_back("end");
+	}
+	return elems;
 }
 
 void orderPrint(const Order &ord) {
@@ -111,10 +115,15 @@ vector<Order> ordersLoad(const string filename) {
 			Order orderNew;
 			getline(orderLoader, input);
 			vector<string> x = split(input, ';');
-			orderNew.id = stoi(x[0]);
-			orderNew.description = x[1];
-			orderNew.status = x[2];
-			orderNew.isDeleted = (stoi(x[3]) == 1);
+			if(x[0] != "end") {
+				orderNew.id = stoi(x[0]);
+				orderNew.description = x[1];
+				orderNew.status = x[2];
+				orderNew.isDeleted = (stoi(x[3]) == 1);
+				vect.push_back(orderNew);
+			} else {
+				break;
+			}
 		}
 		orderLoader.close();
 	}
